@@ -1,7 +1,7 @@
 "use server";
 
 import { env } from "@/env.mjs";
-import { uploadImage } from "@/lib/s3";
+import { uploadImage } from "@/lib/blob";
 import db from "@/lib/supabase/db";
 import { medias } from "@/lib/supabase/schema";
 import { mediaSchema } from "@/validations/medias";
@@ -30,22 +30,20 @@ export async function POST(request: NextRequest) {
       const key = nanoid() + "." + fileExtension;
 
       const params = {
-        Bucket: env.NEXT_PUBLIC_S3_BUCKET,
-        Key: "public/" + key,
-        Body: Buffer.from(await file.arrayBuffer()),
-        ContentType: file.type,
+        file: Buffer.from(await file.arrayBuffer()),
+        contentType: file.type,
       };
 
       try {
-        const s3Response = await uploadImage(params);
+        const blob = await uploadImage(params);
 
-        if (s3Response) {
+        if (blob) {
           const insertedMedia = await db
             .insert(medias)
-            .values({ alt: file.name, key: params.Key })
+            .values({ alt: file.name, key: blob.url })
             .returning();
 
-          return file.path;
+          return blob.url;
         }
       } catch (err) {
         statusCode = 400;

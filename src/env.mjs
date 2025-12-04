@@ -12,8 +12,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECERT_KEY: z.string(),
     DATABASE_SERVICE_ROLE: z.string(),
-    S3_ACCESS_KEY_ID: z.string(),
-    S3_SECRET_ACCESS_KEY: z.string(),
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
   },
 
   /**
@@ -25,8 +24,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: z.string(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
     NEXT_PUBLIC_SUPABASE_PROJECT_REF: z.string(),
-    NEXT_PUBLIC_S3_BUCKET: z.string(),
-    NEXT_PUBLIC_S3_REGION: z.string(),
+    NEXT_PUBLIC_SUPABASE_PROJECT_REF: z.string(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
     NEXT_PUBLIC_SUPABASE_URL: z.string(),
   },
@@ -44,14 +42,12 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_PROJECT_REF:
       process.env.NEXT_PUBLIC_SUPABASE_PROJECT_REF,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_S3_BUCKET: process.env.NEXT_PUBLIC_S3_BUCKET,
-    NEXT_PUBLIC_S3_REGION: process.env.NEXT_PUBLIC_S3_REGION,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECERT_KEY: process.env.STRIPE_WEBHOOK_SECERT_KEY,
-    S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
-    S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

@@ -4,41 +4,41 @@ import * as schema from "../schema";
 const collections = [
   {
     id: "1",
-    label: "Bathroom",
-    slug: "bathroom",
-    title: "Elevate Your Bathroom Experience",
+    label: "Notebooks",
+    slug: "notebooks",
+    title: "Capture Your Thoughts",
     description:
-      "Transform your bathroom with our premium essentials, blending luxury, functionality, and style. Shop now for the ultimate in comfort and elegance.",
+      "Premium recycled paper notebooks for your daily musings, sketches, and big ideas. Sustainable and stylish.",
     featuredImageId: "1",
   },
   {
     id: "2",
-    label: "Kitchen",
-    title: "Elevate Your Kitchen Experience",
-    slug: "kitchen-planning",
-    description: "",
+    label: "Pens & Pencils",
+    title: "Write with Purpose",
+    slug: "pens-pencils",
+    description: "Eco-friendly writing instruments crafted from bamboo and recycled materials. Smooth writing, zero waste.",
     featuredImageId: "2",
   },
   {
     id: "3",
-    label: "Living Room",
-    title: "Elevate Your Kitchen Experience",
-    slug: "living-room-planning",
-    description: "",
+    label: "Paper Goods",
+    title: "The Art of Paper",
+    slug: "paper-goods",
+    description: "Beautifully textured papers, envelopes, and cards for every occasion. Made from post-consumer waste.",
     featuredImageId: "3",
     order: 9,
   },
   {
     id: "4",
-    label: "Bedroom",
-    title: "Elevate Your Bedroom Experience",
-    slug: "Bedroom-planning",
-    description: "",
+    label: "Accessories",
+    title: "Desk Essentials",
+    slug: "accessories",
+    description: "Curated accessories to organize and beautify your workspace. Functional, minimal, and green.",
     featuredImageId: "4",
   },
 ];
 
-const seedCollections = async () => {
+export const seedCollections = async () => {
   try {
     await db.delete(schema.collections);
 
@@ -53,5 +53,3 @@ const seedCollections = async () => {
     console.log("Error happen while inserting collections", err);
   }
 };
-
-export default seedCollections;

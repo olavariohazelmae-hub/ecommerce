@@ -21,9 +21,9 @@ export const getURL = () => {
 };
 
 export const keytoUrl = (key?: string) => {
-  return key
-    ? `https://${env.NEXT_PUBLIC_S3_BUCKET}.s3.${env.NEXT_PUBLIC_S3_REGION}.amazonaws.com/${key}`
-    : "https://hiyori-backpack.s3.us-west-2.amazonaws.com/public/bathroom-planning.jpg";
+  if (!key) return "https://hiyori-backpack.s3.us-west-2.amazonaws.com/public/bathroom-planning.jpg";
+  if (key.startsWith("http")) return key;
+  return `https://hiyori-backpack.s3.us-west-2.amazonaws.com/${key}`;
 };
 
 export function formatPrice(price: number | string) {
@@ -46,9 +46,8 @@ export function formatBytes(
   const accurateSizes = ["Bytes", "KiB", "MiB", "GiB", "TiB"];
   if (bytes === 0) return "0 Byte";
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
-  }`;
+  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
+    }`;
 }
 
 export function slugify(str: string) {

@@ -34,6 +34,8 @@ export const ProductCardFragment = gql(/* GraphQL */ `
     rating
     slug
     badge
+    tags
+    featured
     price
     featuredImage: medias {
       id
@@ -57,7 +59,7 @@ export function ProductCard({
 
   return (
     <Card
-      className={cn("w-full border-0 rounded-lg py-3 ", className)}
+      className={cn("w-full border-0 rounded-xl py-3 ", className)}
       {...props}
     >
       <CardContent className="relative p-0 mb-5 overflow-hidden">

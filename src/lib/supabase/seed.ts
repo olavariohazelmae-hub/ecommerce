@@ -6,8 +6,8 @@ import * as schema from "./schema";
 import * as seed from "./seedData";
 import { exit } from "process";
 
-// import { seedMedias } from "./seedData/medias"
-// import { seedCollections } from "./seedData/collections"
+import { seedMedias } from "./seedData/medias"
+import { seedCollections } from "./seedData/collections"
 
 dotenv.config();
 if (!process.env.DATABASE_URL) {
@@ -18,7 +18,7 @@ const queryClient = postgres(process.env.DATABASE_URL);
 export const db = drizzle(queryClient, { schema });
 
 const seeddata = async () => {
-  // await seed.medias()
+  await seed.medias()
   await seed.collections();
   await seed.products();
   // await seed.shopOrders()

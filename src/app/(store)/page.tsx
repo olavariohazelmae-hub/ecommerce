@@ -1,12 +1,8 @@
 import { getCurrentUser } from "@/features/users/actions";
-import { Icons } from "@/components/layouts/icons";
 import { Shell } from "@/components/layouts/Shell";
 import { buttonVariants } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   CollectionCardFragment,
-  CollectionsCard,
-  CollectionsCardSkeleton,
 } from "@/features/collections";
 import {
   ProductCard,
@@ -20,35 +16,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { SustainabilityIcons } from "@/components/SustainabilityIcons";
 
 const LandingRouteQuery = gql(/* GraphQL */ `
   query LandingRouteQuery($user_id: UUID) {
     products: productsCollection(
-      filter: { featured: { eq: true } }
-      first: 4
+      first: 20
       orderBy: [{ created_at: DescNullsLast }]
     ) {
       edges {
         node {
           id
           ...ProductCardFragment
-        }
-      }
-    }
-
-    wishlistCollection(filter: { user_id: { eq: $user_id } }) {
-      edges {
-        node {
-          product_id
-        }
-      }
-    }
-
-    cartsCollection(filter: { user_id: { eq: $user_id } }) {
-      edges {
-        node {
-          product_id
-          quantity
         }
       }
     }
@@ -72,30 +51,49 @@ export default async function Home() {
 
   const { data } = await getClient().query(LandingRouteQuery, {
     user_id: currentUser?.id,
-  });
+  } as any);
 
-  if (data === null) return notFound();
+  if (!data) return notFound();
+
+  const collections = data.collectionScrollCards?.edges ?? [];
+  const allProducts = data.products?.edges ?? [];
+
+  // Filter products with 'latest' tag AND featured for Latest Arrivals
+  const latestArrivals = allProducts.filter(({ node }) =>
+    node.tags?.includes('latest')
+  ).slice(0, 5);
+
+  // Filter featured products for Our Products section
+  const products = allProducts.filter(({ node }) =>
+    node.featured === true
+  ).slice(0, 10);
 
   return (
     <main>
       <HeroSection />
 
-      <Shell>
-        {data.products && data.products.edges ? (
-          <ProductSubCollectionsCircles
-            collections={data.collectionScrollCards.edges}
-          />
+      <Shell className="gap-12 md:gap-20">
+        {collections.length > 0 ? (
+          <CategoryGrid collections={collections} />
         ) : null}
+      </Shell>
 
-        {data.products && data.products.edges ? (
-          <FeaturedProductsCards products={data.products.edges} />
-        ) : null}
+      {latestArrivals.length > 0 ? (
+        <div className="w-full px-6 md:px-12 lg:px-20 py-12 md:py-16 max-w-screen-xl mx-auto">
+          <FeaturedProductsCards products={latestArrivals} />
+        </div>
+      ) : null}
 
-        <CollectionGrid />
+      {products.length > 0 ? (
+        <div className="w-full px-6 md:px-12 lg:px-20 py-12 md:py-16 max-w-screen-xl mx-auto">
+          <OurProductsSection products={products} />
+        </div>
+      ) : null}
 
-        <DifferentFeatureCards />
+      <Shell className="gap-12 md:gap-20">
+        <SustainabilityIcons />
 
-        <LessIsMoreCard />
+        <JoinCreativesBanner />
       </Shell>
     </main>
   );
@@ -103,53 +101,80 @@ export default async function Home() {
 
 function HeroSection() {
   return (
-    <section className="w-full h-screen md:h-[800px] mx-auto flex justify-center">
-      <div className="relative w-full h-full md:h-[800px]">
-        <Image
-          alt="Furniture"
-          src="https://hiyori-backpack.s3.us-west-2.amazonaws.com/public/hero-image.jpg"
-          width={1920}
-          height={1200}
-          priority={true}
-          className="h-full w-full object-cover "
-        />
-      </div>
+    <section className="w-full bg-[#FAFAF9] py-12 md:py-20 px-6 md:px-12 lg:px-20 overflow-hidden">
+      <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left Content */}
+        <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-8 z-10">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-medium text-[#2C2C2C] leading-[1.05] tracking-tight">
+              Sustainable stationery for <br />
+              <span className="text-[#8B7355] italic">modern creatives</span>
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto md:mx-0 leading-relaxed">
+              Designed with recycled materials. Made for great ideas. Join the movement of conscious creators.
+            </p>
+          </div>
 
-      <div className="container absolute py-8 h-screen md:h-[800px] w-full">
-        <div className="flex flex-col justify-center z-30 h-full">
-          <p className="text-sm md:text-md uppercase tracking-widest text-white ">
-            hugolam
-          </p>
-          <h1 className="text-5xl md:text-9xl font-bold text-white my-4 shadow-md">
-            Utilized with
-            <br />
-            GraphQL:
-          </h1>
-
-          <div className="flex space-x-4 mt-5 max-w-screen">
+          <div className="flex flex-col sm:flex-row gap-6 w-full md:w-auto items-center">
             <Link
               href="/shop"
               className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "border-2 border-white text-white rounded px-8 py-3 ",
-                "md:px-16 md:py-6",
-                "hover:text-zinc-600 hover:bg-white",
+                buttonVariants({ variant: "default", size: "lg" }),
+                "rounded-full px-10 py-6 text-lg bg-[#2C2C2C] text-white hover:bg-[#404040] shadow-lg hover:shadow-xl transition-all"
               )}
             >
-              New in
+              Shop Now
             </Link>
 
-            <Link
-              href="https://github.com/clonglam/HIYORI-master"
-              target="_blank"
-              className={cn(
-                buttonVariants({ variant: "default", size: "lg" }),
-                "border-2 border-primary text-white rounded px-8 py-3 ",
-                "md:px-16 md:py-6",
-              )}
-            >
-              View the Code
-            </Link>
+            <div className="flex items-center justify-center gap-4 px-6">
+              <div className="flex -space-x-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-10 h-10 rounded-full bg-gray-200 border-[3px] border-[#FAFAF9]" />
+                ))}
+              </div>
+              <div className="text-sm text-left">
+                <p className="font-bold text-[#2C2C2C] text-base">100k+</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-wider">Happy Customers</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Composition */}
+        <div className="relative h-[400px] md:h-[550px] w-full flex items-center justify-center md:justify-end">
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 md:-right-6 text-[#E5E5E5]">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="49" stroke="currentColor" strokeWidth="1" />
+            </svg>
+          </div>
+
+          {/* Back Image (Person) - Pill Shape */}
+          <div className="absolute right-0 md:right-10 top-6 bottom-6 w-[220px] md:w-[280px] rounded-[140px] overflow-hidden shadow-2xl z-0 transform rotate-[-3deg]">
+            <Image
+              src="/assets/hero-person-vertical.png"
+              alt="Creative person writing"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
+          {/* Front Image (Product) - Arch Shape */}
+          <div className="absolute left-4 md:left-12 bottom-0 h-[280px] md:h-[350px] w-[200px] md:w-[250px] rounded-t-full overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-[6px] border-[#FAFAF9] z-10">
+            <Image
+              src="/assets/hero-product-vertical.png"
+              alt="Stationery product detail"
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* Floating Star */}
+          <div className="absolute bottom-16 -left-4 text-[#D4A373] animate-pulse">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+            </svg>
           </div>
         </div>
       </div>
@@ -157,48 +182,37 @@ function HeroSection() {
   );
 }
 
-interface FeaturedProductsCards {
-  products: { node: DocumentType<typeof ProductCardFragment> }[];
-}
-
 interface CollectionsCardsProps {
   collections: { node: DocumentType<typeof CollectionCardFragment> }[];
 }
 
-function ProductSubCollectionsCircles({ collections }: CollectionsCardsProps) {
+function CategoryGrid({ collections }: CollectionsCardsProps) {
   return (
-    <section className="flex justify-start items-center gap-x-10 overflow-auto py-12">
-      {collections.map(({ node }) => (
-        <Link
-          href={`/collections/${node.slug}`}
-          key={`collection_circle_${node.id}`}
-        >
-          <div
-            className={cn(
-              "relative bg-secondary rounded-full flex justify-center items-center",
-              "w-[280px] h-[280px]",
-              // "md:w-[320px] md:h-[320px]"
-              // "lg:w-[360px] lg:h-[360px]"
-            )}
+    <section className="space-y-6">
+      <div className="flex justify-between items-end">
+        <h2 className="text-2xl md:text-3xl font-serif font-medium">Categories</h2>
+        <Link href="/shop" className="text-sm font-medium hover:underline">See all</Link>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {collections.slice(0, 4).map(({ node }) => (
+          <Link
+            href={`/collections/${node.slug}`}
+            key={`category_${node.id}`}
+            className="group flex flex-col space-y-3"
           >
-            <Image
-              src={keytoUrl(node.featuredImage.key)}
-              alt={node.featuredImage.alt}
-              width={320}
-              height={320}
-              className={cn(
-                "object-center object-cover hover:scale-105 transition-all duration-500",
-                "w-[240px] h-[240px]",
-                // "md:w-[280px] md:h-[280px]",
-                // "lg:w-[320px] lg:h-[320px]"
-              )}
-            />
-          </div>
-          <p className="text-black text-center mt-3 font-semibold">
-            {node.label}
-          </p>
-        </Link>
-      ))}
+            <div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden">
+              <Image
+                src={keytoUrl(node.featuredImage.key)}
+                alt={node.featuredImage.alt}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <p className="font-medium text-lg">{node.label}</p>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }
@@ -209,25 +223,56 @@ interface FeaturedProductsCardsProps {
 
 function FeaturedProductsCards({ products }: FeaturedProductsCardsProps) {
   return (
-    <section className="container mt-12">
-      <div className="">
-        <h2 className="font-semibold text-2xl md:text-3xl mb-1 md:mb-3">
-          Featured Products
-        </h2>
-        <p className="max-w-4xl text-sm md:text-md leading-[1.5] tracking-[-2%] mb-2">
-          Ideas to help Bring Home to Life based on your recently viewed
-          products. Share your space on Instagram and tag @Penpengrian
-        </p>
+    <section className="space-y-6 max-w-none">
+      <div className="flex justify-between items-end">
+        <h2 className="text-2xl md:text-3xl font-serif font-medium">Our latest arrivals</h2>
+        <Link href="/shop" className="text-sm font-medium hover:underline">See all</Link>
       </div>
+      <p className="text-muted-foreground max-w-2xl">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 py-5 overflow-auto">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <Suspense
-          fallback={[...Array(4)].map((_, index) => (
+          fallback={[...Array(5)].map((_, index) => (
+            <div key={index} className="aspect-[4/5] bg-secondary animate-pulse rounded-xl" />
+          ))}
+        >
+          {products.slice(0, 5).map(({ node }) => (
+            <div key={node.id} className="group relative aspect-[4/5] bg-secondary rounded-xl overflow-hidden">
+              <Image
+                src={keytoUrl(node.featuredImage.key)}
+                alt={node.featuredImage.alt}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+          ))}
+        </Suspense>
+      </div>
+    </section>
+  );
+}
+
+function OurProductsSection({ products }: FeaturedProductsCardsProps) {
+  return (
+    <section className="space-y-6 max-w-none">
+      <div className="flex justify-between items-end">
+        <h2 className="text-2xl md:text-3xl font-serif font-medium">Our Products</h2>
+        <Link href="/shop" className="text-sm font-medium hover:underline">See all</Link>
+      </div>
+      <p className="text-muted-foreground max-w-2xl">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <Suspense
+          fallback={[...Array(5)].map((_, index) => (
             <ProductCardSkeleton key={`Product-Skeleton-${index}`} />
           ))}
         >
           {products.map(({ node }) => (
-            <ProductCard key={`product-card-${node.id}`} product={node} />
+            <ProductCard key={`product-card-${node.id}`} product={node} className="bg-transparent shadow-none border-none" />
           ))}
         </Suspense>
       </div>
@@ -235,153 +280,22 @@ function FeaturedProductsCards({ products }: FeaturedProductsCardsProps) {
   );
 }
 
-function CollectionGrid() {
+function JoinCreativesBanner() {
   return (
-    <section className="relative lg:space-x-5 space-y-5 lg:space-y-0 grid grid-cols-1 lg:grid-cols-3 max-h-[840px]">
-      <div className="relative col-span-2 w-full h-[840px]">
-        <Image
-          src={keytoUrl("public/zPiCx79oGe5X4rVBLg0Ss.jpeg")}
-          width={1080}
-          height={1080}
-          className="object-cover w-full h-full"
-          alt="1"
-        />
-        <div className="bg-zinc-800/20 flex justify-center items-center flex-col absolute w-full h-full top-0 left-0 text-white">
-          <p className="text-5xl mb-3">Bath Room</p>
-          <p className=" font-light mb-8">Designed for enhanchment</p>
-          <Link
-            className={cn(buttonVariants({ size: "lg" }), "text-xl py-8 px-10")}
-            href={"/collections/bathroom"}
-          >
-            DiscoverNow
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex flex-col w-full space-y-5 h-[840px]">
-        <div className="relative w-full h-[340px]">
-          <Image
-            src={keytoUrl("public/E2MWE99uGyOZLd76UEixy.jpeg")}
-            width={800}
-            height={900}
-            className="object-cover w-full h-full"
-            alt="1"
-          />
-        </div>
-
-        <div className="relative overflow-hidden">
-          <Image
-            src={keytoUrl("public/YPO3VwJvjvlkWzNtIv9FS.jpeg")}
-            width={800}
-            height={900}
-            className="object-cover w-full h-full"
-            alt="1"
-          />
-        </div>
-      </div>
+    <section className="w-full bg-secondary/50 rounded-3xl p-8 md:p-16 text-center space-y-6 my-8">
+      <h2 className="text-2xl md:text-3xl font-serif font-medium max-w-lg mx-auto">
+        Join other creatives choosing sustainable stationery.
+      </h2>
+      <Link
+        href="/shop"
+        className={cn(
+          buttonVariants({ variant: "default", size: "lg" }),
+          "rounded-full px-8 py-6 text-lg bg-black text-white hover:bg-black/80"
+        )}
+      >
+        Shop Best Sellers
+      </Link>
     </section>
   );
 }
 
-function CollectionRectCard({ collections }: CollectionsCardsProps) {
-  return (
-    <ScrollArea className="whitespace-nowrap relative container">
-      <div className="flex w-max space-x-10 py-5 overflow-auto">
-        <Suspense
-          fallback={[...Array(6)].map((_, index) => (
-            <CollectionsCardSkeleton key={`Collections-sekelton-${index}`} />
-          ))}
-        >
-          {collections.map(({ node }) => (
-            <CollectionsCard collection={node} key={node.id} />
-          ))}
-        </Suspense>
-      </div>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
-  );
-}
-
-function DifferentFeatureCards() {
-  const features = [
-    {
-      Icon: Icons.cart,
-      title: "Responsible Design",
-      description:
-        "Designed with integrity and durably crafted for everyday use.",
-    },
-    {
-      Icon: Icons.tag,
-      title: "Transparent Pricing",
-      description:
-        "We believe in accessible pricing and full transparency. Our pricing model is an open book.",
-    },
-    {
-      Icon: Icons.package,
-      title: "Sustainable Sourcing",
-      description:
-        "We only partner with people who put the earth, and its people, first.",
-    },
-    {
-      Icon: Icons.award,
-      title: "Giving Back",
-      description:
-        "Thanks to Mealshare, every purchase directly donates a meal to a youth in need.",
-    },
-  ];
-  return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 pt-5 gap-y-8 gap-x-5 md:gap-x-12 mx-auto">
-      {features.map(({ Icon, title, description }, index) => (
-        <div
-          className="text-center  max-w-[18rem]"
-          key={`FeatureCards_${index}`}
-        >
-          <div className="flex justify-center items-center p-5">
-            <Icon
-              width={45}
-              height={45}
-              className="mb-5 text-zinc-400 font-light"
-            />
-          </div>
-
-          <h4 className="text-xl font-serif font-extralight mb-3">{title}</h4>
-          <p className="text-lg text-muted-foreground">{description}</p>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-function LessIsMoreCard() {
-  return (
-    <section className="max-w-[1920px] mx-auto h-[620px] md:h-[580px] bg-[#FFF8EE] grid grid-cols-12 my-16">
-      <div className="relative w-full h-[340px] md:h-[580px] col-span-12 md:col-span-8 overflow-hidden">
-        <Image
-          src={"/assets/cutingcardImage.jpg"}
-          alt=""
-          fill
-          className="object-cover object-center"
-        />
-      </div>
-
-      <div className="col-span-12 md:col-span-4 pb-6 md:py-20 px-6 md:px-16">
-        <h2 className="text-xl md:text-3xl font-semibold mb-3">
-          Less is More. Minimal.
-        </h2>
-        <p className="text-xs leading-[1.5] md:text-lg tracking-tight mb-5 md:mb-12 text-left max-w-md">
-          We believe no one should have to choose between the quality they want,
-          and the price they can afford. That’s why we make sure our products
-          stand up to only the highest quality and sustainability standards -
-          and produce them in a way that keeps great design affordable for
-          everyone.
-        </p>
-        <Link
-          href="/shop"
-          className={cn(buttonVariants(), "rounded-full text-xs md:text-md")}
-        >
-          Shop now
-        </Link>
-      </div>
-    </section>
-  );
-}

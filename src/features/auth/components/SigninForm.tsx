@@ -45,6 +45,8 @@ export function SignInForm() {
   }, [searchParams]);
 
   function onSubmit({ email, password }: FormData) {
+    console.log("email", email);
+    console.log("password", password);
     startTransition(async () => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,

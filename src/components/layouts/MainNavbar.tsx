@@ -21,23 +21,24 @@ async function MainNavbar({ adminLayout = false }: MainNavbarProps) {
           adminLayout ? "mx-auto px-[3rem] max-w-[2500px] py-3" : "container",
         )}
       >
-        <div className="hidden md:flex gap-x-8 justify-between items-center">
-          {/* Menu & branding */}
-          <div className="flex gap-x-3 items-center">
+        <div className="hidden md:grid grid-cols-3 items-center">
+          {/* Left: Menu & Search */}
+          <div className="flex gap-x-4 items-center justify-start">
             <SideMenu />
+            {!adminLayout && (
+              <Suspense>
+                <SearchInput />
+              </Suspense>
+            )}
+          </div>
+
+          {/* Center: Branding */}
+          <div className="flex justify-center">
             <Branding />
           </div>
 
-          {adminLayout ? (
-            <></>
-          ) : (
-            <Suspense>
-              <SearchInput />
-            </Suspense>
-          )}
-
-          {/* Nav Action */}
-          <div className="flex gap-x-5 relative items-center">
+          {/* Right: Nav Action */}
+          <div className="flex gap-x-5 relative items-center justify-end">
             <Suspense>
               <UserNav />
             </Suspense>

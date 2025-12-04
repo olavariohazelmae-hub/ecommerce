@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import db from "@/lib/supabase/db";
 import { medias } from "@/lib/supabase/schema";
+import { keytoUrl } from "@/lib/utils";
 
 export async function GET(
   request: NextRequest,
@@ -22,7 +23,7 @@ export async function GET(
   return NextResponse.json(
     {
       data: media,
-      preview: "https://hugo-coding.s3.us-west-1.amazonaws.com/" + media.key,
+      preview: keytoUrl(media.key),
     },
     { status: 201 },
   );
