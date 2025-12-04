@@ -160,7 +160,7 @@ export const products = pgTable(
     slug: varchar("slug", { length: 191 }).notNull().unique(),
     description: text("description"),
     featured: boolean("featured").default(false),
-    badge: text("badge", { enum: ["new_product", "best_sale", "featured"] }),
+    badge: text("badge", { enum: ["new_product", "best_sale", "featured", "latest"] }),
     rating: decimal("rating", { precision: 2, scale: 1 })
       .notNull()
       .default("4"),
@@ -370,7 +370,7 @@ export const productMedias = pgTable(
   },
 );
 
-export type BadgeType = "best_sale" | "featured" | "new_product";
+export type BadgeType = "best_sale" | "featured" | "new_product" | "latest";
 
 export type SelectProducts = InferSelectModel<typeof products>;
 export type InsertProducts = InferInsertModel<typeof products>;
