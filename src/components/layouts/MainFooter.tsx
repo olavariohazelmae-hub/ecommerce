@@ -98,7 +98,7 @@ function MainFooter({ }: Props) {
   ];
 
   return (
-    <footer className="bg-secondary mt-[80px] md:mt-[180px] border-t border-border">
+    <footer className="bg-secondary mt-[80px] md:mt-0 border-t border-border">
       <div className="container pb-10 pt-4 md:pt-8">
         <div className="grid grid-cols-1 md:grid-cols-5 mb-[40px] md:mb-[80px] gap-x-[100px] place-content-between space-y-9">
           <div className="max-w-md col-span-1 md:col-span-5 lg:col-span-2">

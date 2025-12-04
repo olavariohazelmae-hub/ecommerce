@@ -8,9 +8,9 @@ export const siteConfig = {
   name: "Aesthesionery",
   description: "Ecommerce Application built with NextJS 14",
   url: "https://hiyori.hugo-coding.com",
-  address: "1600 Amphitheatre Parkway in Mountain View, California",
+  address: "Niagara Falls, Ontario, Canada",
   phone: "+1(234)-567-8901",
-  email: "hello@hugo-coding.com",
+  email: "hazel@aesthesionary.com",
   mainNav: [
     {
       title: "Shop",
@@ -20,8 +20,8 @@ export const siteConfig = {
     },
     {
       title: "Our Story",
-      href: "https://github.com/clonglam/HIYORI-master",
-      description: "Our Story.",
+      href: "/our-story",
+      description: "Learn about our commitment to sustainable stationery.",
       items: [],
     },
     {

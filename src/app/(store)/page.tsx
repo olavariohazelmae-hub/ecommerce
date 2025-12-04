@@ -229,7 +229,7 @@ function FeaturedProductsCards({ products }: FeaturedProductsCardsProps) {
         <Link href="/shop" className="text-sm font-medium hover:underline">See all</Link>
       </div>
       <p className="text-muted-foreground max-w-2xl">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Discover our newest sustainable stationery pieces, carefully crafted from eco-friendly materials.
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -262,7 +262,7 @@ function OurProductsSection({ products }: FeaturedProductsCardsProps) {
         <Link href="/shop" className="text-sm font-medium hover:underline">See all</Link>
       </div>
       <p className="text-muted-foreground max-w-2xl">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Explore our complete collection of premium, eco-conscious stationery designed for creative minds.
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
