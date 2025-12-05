@@ -10,7 +10,7 @@ type ProductImageShowcaseProps = React.HTMLAttributes<HTMLDivElement> & {
   data: DocumentType<typeof ProductImageShowcaseFragment>;
 };
 
-const ProductImageShowcaseFragment = gql(/* GraphQL */ `
+export const ProductImageShowcaseFragment = gql(/* GraphQL */ `
   fragment ProductImageShowcaseFragment on products {
     id
     featuredImage: medias {

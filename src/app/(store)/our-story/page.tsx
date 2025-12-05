@@ -2,6 +2,7 @@ import { Shell } from "@/components/layouts/Shell";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SustainabilityComparison } from "@/components/SustainabilityComparison";
 
 export default function OurStoryPage() {
     return (
@@ -27,7 +28,7 @@ export default function OurStoryPage() {
                             Aesthesionery was born from a simple belief: that the tools we use to create should be as beautiful and sustainable as the ideas they help bring to life. In a world increasingly dominated by digital screens, we recognized a growing desire for tactile, meaningful experiences—the feel of quality paper, the flow of a well-crafted pen, the satisfaction of handwritten notes.
                         </p>
                         <p className="text-muted-foreground leading-relaxed">
-                            But we also saw a problem. Traditional stationery often came at a cost to our planet. We knew there had to be a better way—one that didn't compromise on quality, aesthetics, or environmental responsibility.
+                            But we also saw a problem. Traditional stationery often came at a cost to our planet. We knew there had to be a better way—one that didn&apos;t compromise on quality, aesthetics, or environmental responsibility.
                         </p>
                     </section>
 
@@ -38,6 +39,12 @@ export default function OurStoryPage() {
                         <p className="text-muted-foreground leading-relaxed">
                             Every product in our collection is thoughtfully designed with the environment in mind. We source materials from sustainable forests, use recycled and recyclable materials wherever possible, and partner with manufacturers who share our commitment to ethical production practices.
                         </p>
+
+                        <div className="my-12">
+                            <h3 className="text-xl font-medium mb-6 text-center">The Aesthesionery Difference</h3>
+                            <SustainabilityComparison />
+                        </div>
+
                         <div className="grid md:grid-cols-3 gap-6 my-8">
                             <div className="bg-secondary/30 p-6 rounded-xl space-y-2">
                                 <h3 className="font-semibold text-lg">100% Recyclable</h3>
@@ -65,10 +72,10 @@ export default function OurStoryPage() {
                             Designed for Creatives
                         </h2>
                         <p className="text-muted-foreground leading-relaxed">
-                            We believe that great tools inspire great work. That's why every item in our collection is carefully curated to meet the needs of artists, writers, designers, and thinkers. From the weight of our paper to the balance of our pens, every detail is considered to enhance your creative process.
+                            We believe that great tools inspire great work. That&apos;s why every item in our collection is carefully curated to meet the needs of artists, writers, designers, and thinkers. From the weight of our paper to the balance of our pens, every detail is considered to enhance your creative process.
                         </p>
                         <p className="text-muted-foreground leading-relaxed">
-                            Whether you're sketching your next masterpiece, journaling your thoughts, or planning your next project, Aesthesionery provides the premium, eco-conscious tools you need to bring your ideas to life.
+                            Whether you&apos;re sketching your next masterpiece, journaling your thoughts, or planning your next project, Aesthesionery provides the premium, eco-conscious tools you need to bring your ideas to life.
                         </p>
                     </section>
 
@@ -77,7 +84,7 @@ export default function OurStoryPage() {
                             Join Our Community
                         </h2>
                         <p className="text-muted-foreground leading-relaxed">
-                            We're more than just a stationery brand—we're a community of creators who believe in the power of sustainable choices. When you choose Aesthesionery, you're not just buying products; you're joining a movement toward a more beautiful, sustainable future.
+                            We&apos;re more than just a stationery brand—we&apos;re a community of creators who believe in the power of sustainable choices. When you choose Aesthesionery, you&apos;re not just buying products; you&apos;re joining a movement toward a more beautiful, sustainable future.
                         </p>
                     </section>
                 </div>

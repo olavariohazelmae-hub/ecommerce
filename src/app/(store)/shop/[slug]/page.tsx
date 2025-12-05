@@ -13,6 +13,7 @@ import {
   BuyNowButton,
   ProductCard,
   ProductImageShowcase,
+  ProductImageShowcaseFragment,
   ProductAnalyticsTracker,
 } from "@/features/products";
 import { AddToWishListButton } from "@/features/wishlists";
@@ -72,9 +73,18 @@ const ProductDetailPageQuery = gql(/* GraphQL */ `
 `);
 
 async function ProductDetailPage({ params }: Props) {
-  const { data, error } = await getClient().query(ProductDetailPageQuery, {
-    productSlug: params.slug as string,
-  });
+  const { data, error } = await getClient().query(
+    ProductDetailPageQuery,
+    {
+      productSlug: params.slug as string,
+    },
+    {
+      requestPolicy: "network-only",
+      fetchOptions: {
+        cache: "no-store",
+      },
+    }
+  );
 
   if (!data || !data.productsCollection || !data.productsCollection.edges)
     return notFound();

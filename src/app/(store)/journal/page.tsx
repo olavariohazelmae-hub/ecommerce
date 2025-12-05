@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getBlogPosts } from "@/lib/blog";
-import { Shell } from "@/components/shell";
+import { Shell } from "@/components/layouts/Shell";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
 

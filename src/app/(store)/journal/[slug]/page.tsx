@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getBlogPostBySlug, getBlogPosts } from "@/lib/blog";
-import { Shell } from "@/components/shell";
+import { Shell } from "@/components/layouts/Shell";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";

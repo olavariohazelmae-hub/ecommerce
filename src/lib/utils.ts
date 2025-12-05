@@ -33,7 +33,7 @@ export function formatPrice(price: number | string) {
   }).format(Number(price));
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date | string) {
   return dayjs(date).format("MMMM D, YYYY");
 }
 
