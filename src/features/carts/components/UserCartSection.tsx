@@ -20,6 +20,7 @@ import CheckoutButton from "./CheckoutButton";
 import EmptyCart from "@/features/carts/components/EmptyCart";
 import { RemoveCartsMutation, updateCartsMutation } from "../query";
 import { CartItems } from "../useCartStore";
+import { FreeShippingBanner } from "./FreeShippingBanner";
 
 export const FetchCartQuery = gql(/* GraphQL */ `
   query FetchCartQuery($userId: UUID, $first: Int, $after: Cursor) {
@@ -148,6 +149,17 @@ function UserCartSection({ user }: UserCartSectionProps) {
     return cart;
   };
 
+  const createCartDetails = (
+    data: DocumentType<typeof FetchCartQuery>,
+  ) => {
+    return data.cartsCollection.edges.map((item) => ({
+      id: item.node.product.id,
+      name: item.node.product.name,
+      price: Number(item.node.product.price),
+      quantity: item.node.quantity,
+    }));
+  };
+
   return (
     <>
       {data.cartsCollection && data.cartsCollection.edges.length > 0 ? (
@@ -155,7 +167,8 @@ function UserCartSection({ user }: UserCartSectionProps) {
           aria-label="Cart Section"
           className="grid grid-cols-12 gap-x-6 gap-y-5"
         >
-          <div className="col-span-12 md:col-span-9 max-h-[420px] overflow-y-auto">
+          <div className="col-span-12 md:col-span-9 max-h-[420px] overflow-y-auto space-y-4">
+            <FreeShippingBanner subtotal={subtotal} />
             {data.cartsCollection?.edges.map(({ node }) => (
               <CartItemCard
                 key={node.product_id}
@@ -188,6 +201,7 @@ function UserCartSection({ user }: UserCartSectionProps) {
                 guest={false}
                 disabled={isLoading}
                 order={createCartObject(data)}
+                cartDetails={createCartDetails(data)}
               />
             </CardFooter>
           </Card>

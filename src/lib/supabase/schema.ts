@@ -170,6 +170,17 @@ export const products = pgTable(
       .notNull()
       .default("0.00"),
     totalComments: integer("totalComments").default(0).notNull(),
+    sustainability: json("sustainability").$type<{
+      materials: string;
+      carbonFootprint: string;
+      recyclingInstructions: string;
+      certifications: string[];
+    }>().default({
+      materials: "",
+      carbonFootprint: "",
+      recyclingInstructions: "",
+      certifications: [],
+    }),
     createdAt: timestamp("created_at", {
       withTimezone: true,
     })

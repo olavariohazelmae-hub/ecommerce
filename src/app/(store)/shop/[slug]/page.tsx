@@ -13,6 +13,7 @@ import {
   BuyNowButton,
   ProductCard,
   ProductImageShowcase,
+  ProductAnalyticsTracker,
 } from "@/features/products";
 import { AddToWishListButton } from "@/features/wishlists";
 import { gql } from "@/gql";
@@ -42,6 +43,7 @@ const ProductDetailPageQuery = gql(/* GraphQL */ `
           price
           tags
           totalComments
+          sustainability
           ...ProductImageShowcaseFragment
           commentsCollection(first: 5) {
             edges {
@@ -77,13 +79,23 @@ async function ProductDetailPage({ params }: Props) {
   if (!data || !data.productsCollection || !data.productsCollection.edges)
     return notFound();
 
-  const { id, name, description, price, commentsCollection, totalComments } =
+  const { id, name, description, price, commentsCollection, totalComments, sustainability } =
     data.productsCollection.edges[0].node;
+
+  // Parse sustainability if it's a string (though it should be an object from GraphQL if typed correctly)
+  // In Supabase GraphQL, JSON types are returned as is.
+  const impactData = sustainability as {
+    materials: string;
+    carbonFootprint: string;
+    recyclingInstructions: string;
+    certifications: string[];
+  };
 
   return (
     <Shell>
       <div className="grid grid-cols-12 gap-x-8">
         <div className="space-y-8 relative col-span-12 md:col-span-7">
+          <ProductAnalyticsTracker product={{ id, name, price }} />
           <ProductImageShowcase data={data.productsCollection.edges[0].node} />
         </div>
 
@@ -100,35 +112,63 @@ async function ProductDetailPage({ params }: Props) {
 
           <section className="flex mb-8 items-end space-x-5">
             <Suspense>
-              <AddProductToCartForm productId={id} />
+              <AddProductToCartForm productId={id} productName={name} productPrice={price} />
             </Suspense>
 
             <BuyNowButton productId={id} />
           </section>
 
           <section>
-            <p>{description}</p>
+            <p className="mb-6 text-muted-foreground leading-relaxed">{description}</p>
 
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionTrigger className="text-lg font-medium">Materials & Impact</AccordionTrigger>
                 <AccordionContent>
-                  Yes. It adheres to the WAI-ARIA design pattern.
+                  <div className="space-y-4 pt-2">
+                    {impactData?.materials && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">Materials</h4>
+                        <p className="text-muted-foreground">{impactData.materials}</p>
+                      </div>
+                    )}
+
+                    {impactData?.carbonFootprint && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">Carbon Footprint</h4>
+                        <p className="text-muted-foreground">{impactData.carbonFootprint}</p>
+                      </div>
+                    )}
+
+                    {impactData?.recyclingInstructions && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">End of Life</h4>
+                        <p className="text-muted-foreground">{impactData.recyclingInstructions}</p>
+                      </div>
+                    )}
+
+                    {impactData?.certifications && impactData.certifications.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold text-sm mb-1">Certifications</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {impactData.certifications.map((cert, i) => (
+                            <span key={i} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
+                              {cert}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionTrigger>Shipping & Returns</AccordionTrigger>
                 <AccordionContent>
-                  Yes. It adheres to the WAI-ARIA design pattern.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger>Ship & Returns</AccordionTrigger>
-                <AccordionContent>
-                  Shipping & Returns Spend $80 to receive free shipping for a
-                  limited time. Oversized items require additional handling
-                  fees. Learn more. Merchandise can be returned or exchanged within 30 days of
-                  delivery. Learn more
+                  <p className="text-muted-foreground">
+                    Spend $80 to receive free shipping for a limited time. Oversized items require additional handling fees.
+                    Merchandise can be returned or exchanged within 30 days of delivery.
+                  </p>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

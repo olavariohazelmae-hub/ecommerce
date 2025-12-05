@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: "Eco-friendly and aesthetic stationery for your daily needs.",
 };
 
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <CustomProvider>
         <body className={`${inter.variable} ${playfair.variable} font-sans`}>
+          <GoogleAnalytics />
           {children}
           <Toaster />
         </body>

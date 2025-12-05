@@ -16,12 +16,15 @@ import {
 import { useAuth } from "@/providers/AuthProvider";
 import useCartActions from "../hooks/useCartActions";
 import { AddProductCartData, AddProductToCartSchema } from "../validations";
+import { addToCart } from "@/lib/analytics";
 
 interface AddProductToCartFormProps {
   productId: string;
+  productName?: string;
+  productPrice?: any;
 }
 
-function AddProductToCartForm({ productId }: AddProductToCartFormProps) {
+function AddProductToCartForm({ productId, productName, productPrice }: AddProductToCartFormProps) {
   const { user } = useAuth();
   const { addProductToCart } = useCartActions(user, productId);
   const maxQuantity = 8;
@@ -35,6 +38,14 @@ function AddProductToCartForm({ productId }: AddProductToCartFormProps) {
 
   async function onSubmit(values: AddProductCartData) {
     addProductToCart(values.quantity);
+    if (productName) {
+      addToCart({
+        id: productId,
+        name: productName,
+        price: productPrice,
+        quantity: values.quantity,
+      });
+    }
   }
 
   const addOne = () => {

@@ -7,17 +7,29 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import type { CartItems } from "@/features/carts";
 
+import { beginCheckout } from "@/lib/analytics";
+
 type CheckoutButtonProps = React.ComponentProps<typeof Button> & {
   order: CartItems;
   guest: boolean;
+  cartDetails?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 };
 
-function CheckoutButton({ order, guest, ...props }: CheckoutButtonProps) {
+function CheckoutButton({ order, guest, cartDetails, ...props }: CheckoutButtonProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const onClickHandler = async () => {
     setIsLoading(true);
+
+    if (cartDetails) {
+      beginCheckout(cartDetails);
+    }
 
     const res = await fetch("/api/create-checkout-session", {
       method: "POST",

@@ -1,6 +1,7 @@
 import db from "../db";
 import * as schema from "../schema";
 import { InsertProducts } from "../schema";
+import { sql } from "drizzle-orm";
 
 const products: InsertProducts[] = [
   {
@@ -15,6 +16,12 @@ const products: InsertProducts[] = [
     featuredImageId: "5",
     collectionId: "1",
     stock: 50,
+    sustainability: {
+      materials: "100% Recycled Kraft Paper, Soy-based Ink",
+      carbonFootprint: "1.2kg CO2e",
+      recyclingInstructions: "Fully recyclable. Remove metal spiral binding before recycling paper.",
+      certifications: ["FSC Recycled", "Green Seal"],
+    },
   },
   {
     id: "2",
@@ -28,6 +35,12 @@ const products: InsertProducts[] = [
     badge: "latest",
     stock: 32,
     tags: ["pen", "bamboo", "sustainable"],
+    sustainability: {
+      materials: "Sustainably harvested bamboo, Stainless steel nib",
+      carbonFootprint: "0.8kg CO2e",
+      recyclingInstructions: "Bamboo body is biodegradable. Metal parts can be recycled.",
+      certifications: ["FSC Certified Bamboo"],
+    },
   },
   {
     id: "3",
@@ -40,6 +53,12 @@ const products: InsertProducts[] = [
     collectionId: "3",
     stock: 100,
     tags: ["envelopes", "paper", "stationery"],
+    sustainability: {
+      materials: "100% Post-consumer waste paper",
+      carbonFootprint: "0.5kg CO2e per pack",
+      recyclingInstructions: "Fully recyclable with paper waste.",
+      certifications: ["FSC Recycled"],
+    },
   },
   {
     id: "4",
@@ -53,6 +72,12 @@ const products: InsertProducts[] = [
     badge: "featured",
     stock: 25,
     tags: ["washi", "tape", "decoration"],
+    sustainability: {
+      materials: "Natural fibers, Non-toxic adhesive",
+      carbonFootprint: "0.3kg CO2e",
+      recyclingInstructions: "Biodegradable. Can be composted.",
+      certifications: ["Biodegradable Products Institute (BPI)"],
+    },
   },
   {
     id: "5",
@@ -66,6 +91,12 @@ const products: InsertProducts[] = [
     badge: "best_sale",
     stock: 15,
     tags: ["sketchbook", "art", "drawing"],
+    sustainability: {
+      materials: "Acid-free paper, Recycled cardboard cover",
+      carbonFootprint: "1.5kg CO2e",
+      recyclingInstructions: "Paper pages are recyclable. Cover can be recycled if binding is removed.",
+      certifications: ["FSC Mixed"],
+    },
   },
   {
     id: "6",
@@ -78,6 +109,12 @@ const products: InsertProducts[] = [
     collectionId: "4",
     stock: 40,
     tags: ["organizer", "desk", "cork"],
+    sustainability: {
+      materials: "100% Natural Cork",
+      carbonFootprint: "0.9kg CO2e",
+      recyclingInstructions: "Cork is biodegradable and compostable.",
+      certifications: ["Rainforest Alliance Certified"],
+    },
   },
   {
     id: "7",
@@ -91,6 +128,12 @@ const products: InsertProducts[] = [
     badge: "latest",
     stock: 120,
     tags: ["pencils", "recycled", "writing"],
+    sustainability: {
+      materials: "Recycled Newspaper, Graphite, Non-toxic glue",
+      carbonFootprint: "0.4kg CO2e per pack",
+      recyclingInstructions: "Shavings are compostable. Stub can be recycled.",
+      certifications: ["Recycled Content Certification"],
+    },
   },
   {
     id: "8",
@@ -103,6 +146,12 @@ const products: InsertProducts[] = [
     collectionId: "3",
     stock: 20,
     tags: ["art", "prints", "botanical"],
+    sustainability: {
+      materials: "100% Recycled Cardstock, Soy-based Inks",
+      carbonFootprint: "0.6kg CO2e",
+      recyclingInstructions: "Fully recyclable as paper.",
+      certifications: ["FSC Recycled"],
+    },
   },
   {
     id: "9",
@@ -115,6 +164,12 @@ const products: InsertProducts[] = [
     collectionId: "1",
     stock: 60,
     tags: ["journal", "notebook", "writing"],
+    sustainability: {
+      materials: "Linen fabric, Acid-free paper, Recycled board",
+      carbonFootprint: "1.4kg CO2e",
+      recyclingInstructions: "Paper pages are recyclable. Cover is biodegradable.",
+      certifications: ["FSC Mixed"],
+    },
   },
   {
     id: "10",
@@ -128,19 +183,40 @@ const products: InsertProducts[] = [
     badge: "featured",
     stock: 10,
     tags: ["pen holder", "ceramic", "desk"],
+    sustainability: {
+      materials: "Stoneware clay, Lead-free glaze",
+      carbonFootprint: "1.1kg CO2e",
+      recyclingInstructions: "Ceramic is inert and can be used as fill. Not recyclable in standard bins.",
+      certifications: [],
+    },
   },
 ];
 
 const seedProducts = async () => {
   try {
-    await db.delete(schema.products);
+    // await db.delete(schema.products);
     await db
       .insert(schema.products)
       .values(products)
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.products.id,
+        set: {
+          name: sql`excluded.name`,
+          description: sql`excluded.description`,
+          featured: sql`excluded.featured`,
+          badge: sql`excluded.badge`,
+          rating: sql`excluded.rating`,
+          tags: sql`excluded.tags`,
+          price: sql`excluded.price`,
+          stock: sql`excluded.stock`,
+          collectionId: sql`excluded.collection_id`,
+          featuredImageId: sql`excluded.featured_image_id`,
+          sustainability: sql`excluded.sustainability`,
+        },
+      })
       .returning();
   } catch (err) {
-    console.log("Error happen while inserting collections", err);
+    console.log("Error happen while inserting products", err);
   }
 };
 
