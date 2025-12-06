@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Eco-friendly and aesthetic stationery for your daily needs.",
 };
 
-import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import { GoogleTagManager as GTMComponent } from "@/components/analytics/GoogleTagManager";
 
 export default function RootLayout({
   children,
@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <CustomProvider>
         <body className={`${inter.variable} ${playfair.variable} font-sans`}>
-          <GoogleAnalytics />
+          <GTMComponent />
           {children}
           <Toaster />
           <Analytics />
