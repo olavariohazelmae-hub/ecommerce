@@ -4,6 +4,7 @@ import {
   UsersColumns,
   AdminUserNav,
 } from "@/features/users";
+import { Suspense } from "react";
 import AdminShell from "@/components/admin/AdminShell";
 import { ProductsDataTable } from "@/features/products";
 import ErrorToaster from "@/components/layouts/ErrorToaster";
@@ -24,7 +25,9 @@ async function UsersPage({ searchParams }: AdminUsersPageProps) {
     <AdminShell heading="Users" description="Edit/Create new user by admin.">
       <AdminUserNav />
       <ProductsDataTable columns={UsersColumns} data={users || []} />
-      <ErrorToaster />
+      <Suspense>
+        <ErrorToaster />
+      </Suspense>
     </AdminShell>
   );
 }

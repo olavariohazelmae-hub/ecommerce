@@ -23,6 +23,8 @@ const documents = {
     types.AdminProductsPageQueryDocument,
   "\n  query CollectionRouteQuery($collectionSlug: String) {\n    collectionsCollection(\n      filter: { slug: { eq: $collectionSlug } }\n      orderBy: [{ order: DescNullsLast }]\n      first: 1\n    ) {\n      edges {\n        node {\n          title\n          label\n          description\n          ...CollectionBannerFragment\n          productsCollection(orderBy: [{ created_at: DescNullsLast }]) {\n            pageInfo {\n              hasNextPage\n            }\n            edges {\n              node {\n                id\n                ...ProductCardFragment\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n":
     types.CollectionRouteQueryDocument,
+  "\n  query DebugProductPageQuery($productSlug: String) {\n    productsCollection(filter: { slug: { eq: $productSlug } }) {\n      edges {\n        node {\n          id\n          name\n          slug\n        }\n      }\n    }\n  }\n":
+    types.DebugProductPageQueryDocument,
   "\n  query OrderPageQuery($first: Int!, $userId: UUID) {\n    ordersCollection(\n      first: $first\n      orderBy: [{ created_at: DescNullsLast }]\n      filter: { user_id: { eq: $userId } }\n    ) {\n      __typename\n      edges {\n        ...OrdersListFragment\n      }\n    }\n\n    productsCollection(first: 8) {\n      edges {\n        ...BuyAgainCardFragment\n      }\n    }\n  }\n":
     types.OrderPageQueryDocument,
   "\n  query LandingRouteQuery($user_id: UUID) {\n    products: productsCollection(\n      first: 20\n      orderBy: [{ created_at: DescNullsLast }]\n    ) {\n      edges {\n        node {\n          id\n          ...ProductCardFragment\n        }\n      }\n    }\n\n    collectionScrollCards: collectionsCollection(\n      first: 6\n      orderBy: [{ order: DescNullsLast }]\n    ) {\n      edges {\n        node {\n          id\n          ...CollectionCardFragment\n        }\n      }\n    }\n  }\n":
@@ -133,6 +135,12 @@ export function gql(
 export function gql(
   source: "\n  query CollectionRouteQuery($collectionSlug: String) {\n    collectionsCollection(\n      filter: { slug: { eq: $collectionSlug } }\n      orderBy: [{ order: DescNullsLast }]\n      first: 1\n    ) {\n      edges {\n        node {\n          title\n          label\n          description\n          ...CollectionBannerFragment\n          productsCollection(orderBy: [{ created_at: DescNullsLast }]) {\n            pageInfo {\n              hasNextPage\n            }\n            edges {\n              node {\n                id\n                ...ProductCardFragment\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n",
 ): (typeof documents)["\n  query CollectionRouteQuery($collectionSlug: String) {\n    collectionsCollection(\n      filter: { slug: { eq: $collectionSlug } }\n      orderBy: [{ order: DescNullsLast }]\n      first: 1\n    ) {\n      edges {\n        node {\n          title\n          label\n          description\n          ...CollectionBannerFragment\n          productsCollection(orderBy: [{ created_at: DescNullsLast }]) {\n            pageInfo {\n              hasNextPage\n            }\n            edges {\n              node {\n                id\n                ...ProductCardFragment\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "\n  query DebugProductPageQuery($productSlug: String) {\n    productsCollection(filter: { slug: { eq: $productSlug } }) {\n      edges {\n        node {\n          id\n          name\n          slug\n        }\n      }\n    }\n  }\n",
+): (typeof documents)["\n  query DebugProductPageQuery($productSlug: String) {\n    productsCollection(filter: { slug: { eq: $productSlug } }) {\n      edges {\n        node {\n          id\n          name\n          slug\n        }\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

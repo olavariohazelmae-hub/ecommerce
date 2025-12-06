@@ -2,7 +2,7 @@ import { getClient } from "@/lib/urql";
 import { gql } from "@/gql";
 
 const ProductDetailPageQuery = gql(/* GraphQL */ `
-  query ProductDetailPageQuery($productSlug: String) {
+  query DebugProductPageQuery($productSlug: String) {
     productsCollection(filter: { slug: { eq: $productSlug } }) {
       edges {
         node {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import CustomProvider from "../providers/CustomProvider";
@@ -27,7 +28,9 @@ export default function RootLayout({
     <html lang="en">
       <CustomProvider>
         <body className={`${inter.variable} ${playfair.variable} font-sans`}>
-          <GTMComponent />
+          <Suspense>
+            <GTMComponent />
+          </Suspense>
           {children}
           <Toaster />
           <Analytics />
