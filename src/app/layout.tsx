@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import CustomProvider from "../providers/CustomProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({
@@ -29,6 +30,7 @@ export default function RootLayout({
           <GoogleAnalytics />
           {children}
           <Toaster />
+          <Analytics />
         </body>
       </CustomProvider>
     </html>
