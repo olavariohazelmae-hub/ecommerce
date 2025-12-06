@@ -22,6 +22,7 @@ function AddToCartButton({ productId, quantity = 1 }: AddToCartButtonProps) {
       <Button
         className="rounded-full p-0 h-8 w-8"
         onClick={() => addProductToCart(quantity)}
+        aria-label="Add to cart"
       >
         <Icons.basket className="h-5 w-5 md:h-4 md:w-4" />
       </Button>

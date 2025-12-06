@@ -72,6 +72,7 @@ function AddToWishListButton({ productId }: Props) {
       className="rounded-full p-3"
       variant="ghost"
       onClick={onClickHandler}
+      aria-label={wishlist[productId] ? "Remove from wishlist" : "Add to wishlist"}
     >
       <Icons.heart
         className={cn(

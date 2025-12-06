@@ -6,7 +6,7 @@ import SearchInput from "./SearchInput";
 
 type Props = {};
 
-function MobileSearchInput({}: Props) {
+function MobileSearchInput({ }: Props) {
   const [openSearchBar, setOpenSearchBar] = useState(false);
   return (
     <>
@@ -18,7 +18,7 @@ function MobileSearchInput({}: Props) {
           </div>
         </div>
       ) : (
-        <Button onClick={() => setOpenSearchBar(true)}>
+        <Button onClick={() => setOpenSearchBar(true)} aria-label="Open search">
           <Icons.search size={18} />
         </Button>
       )}

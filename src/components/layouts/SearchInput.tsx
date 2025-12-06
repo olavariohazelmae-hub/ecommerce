@@ -71,7 +71,7 @@ function SearchInput() {
             </FormItem>
           )}
         />
-        <Button className="absolute right-4 top-4" type="submit" variant="link">
+        <Button className="absolute right-4 top-4" type="submit" variant="link" aria-label="Search">
           <Icons.search
             className={cn(
               "h-4 w-4 text-muted-foreground transition-all duration-200",
