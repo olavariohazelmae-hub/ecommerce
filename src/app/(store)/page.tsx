@@ -126,7 +126,7 @@ function HeroSection() {
               Shop Now
             </Link>
 
-            <div className="flex items-center justify-center gap-4 px-6">
+            {/* <div className="flex items-center justify-center gap-4 px-6">
               <div className="flex -space-x-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="w-10 h-10 rounded-full bg-gray-200 border-[3px] border-[#FAFAF9]" />
@@ -136,7 +136,7 @@ function HeroSection() {
                 <p className="font-bold text-[#2C2C2C] text-base">100k+</p>
                 <p className="text-muted-foreground text-xs uppercase tracking-wider">Happy Customers</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

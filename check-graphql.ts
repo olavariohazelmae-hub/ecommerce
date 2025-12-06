@@ -41,28 +41,28 @@ const query = `
 `;
 
 const variables = {
-    productSlug: "classic-kraft-notebook",
+  productSlug: "premium-sketchbook",
 };
 
 const checkGraphQL = async () => {
-    console.log(`Fetching from ${URL}`);
+  console.log(`Fetching from ${URL}`);
 
-    try {
-        const response = await fetch(URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "apiKey": ANON_KEY!,
-                // "Authorization": `Bearer ${ANON_KEY}`,
-            },
-            body: JSON.stringify({ query, variables }),
-        });
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apiKey": ANON_KEY!,
+        // "Authorization": `Bearer ${ANON_KEY}`,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
 
-        const result = await response.json();
-        console.log("GraphQL Result:", JSON.stringify(result, null, 2));
-    } catch (error) {
-        console.error("Error fetching GraphQL:", error);
-    }
+    const result = await response.json();
+    console.log("GraphQL Result:", JSON.stringify(result, null, 2));
+  } catch (error) {
+    console.error("Error fetching GraphQL:", error);
+  }
 };
 
 checkGraphQL();

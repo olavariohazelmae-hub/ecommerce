@@ -14,7 +14,7 @@ const queryClient = postgres(process.env.DATABASE_URL);
 const db = drizzle(queryClient, { schema });
 
 const checkProductBySlug = async () => {
-    const slug = "classic-kraft-notebook";
+    const slug = "premium-sketchbook";
     console.log(`Checking for product with slug: ${slug}`);
 
     const product = await db.query.products.findFirst({

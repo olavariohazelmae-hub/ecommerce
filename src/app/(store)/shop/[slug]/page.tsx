@@ -18,7 +18,7 @@ import {
 } from "@/features/products";
 import { AddToWishListButton } from "@/features/wishlists";
 import { gql } from "@/gql";
-import { getClient } from "@/lib/urql";
+import { getClient, getServiceClient } from "@/lib/urql";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -73,21 +73,20 @@ const ProductDetailPageQuery = gql(/* GraphQL */ `
 `);
 
 async function ProductDetailPage({ params }: Props) {
-  const { data, error } = await getClient().query(
+  const { data, error } = await getServiceClient().query(
     ProductDetailPageQuery,
     {
       productSlug: params.slug as string,
     },
     {
       requestPolicy: "network-only",
-      fetchOptions: {
-        cache: "no-store",
-      },
     }
   );
 
-  if (!data || !data.productsCollection || !data.productsCollection.edges)
+  if (!data || !data.productsCollection || !data.productsCollection.edges || data.productsCollection.edges.length === 0) {
+    console.log(`Product not found for slug: ${params.slug}`);
     return notFound();
+  }
 
   const { id, name, description, price, commentsCollection, totalComments, sustainability } =
     data.productsCollection.edges[0].node;
