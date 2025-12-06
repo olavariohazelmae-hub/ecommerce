@@ -37,8 +37,14 @@ function CheckoutButton({ order, guest, cartDetails, ...props }: CheckoutButtonP
     });
 
     if (!res.ok) {
-      toast({ title: "Somme Error occured" });
+      const errorData = await res.json().catch(() => ({ error: "Unknown error" }));
+      toast({
+        title: "Checkout Error",
+        description: errorData.error || errorData.message || "An error occurred during checkout",
+        variant: "destructive"
+      });
       setIsLoading(false);
+      return;
     }
 
     const { sessionId } = await res.json();

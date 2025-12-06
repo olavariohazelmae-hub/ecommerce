@@ -34,10 +34,11 @@ export async function POST(request: Request) {
   const validation = orderProductsSchema.safeParse(data);
   const supabase = createRouteHandlerClient({ cookies });
 
-  if (!validation)
-    return new NextResponse(JSON.stringify("Invalid data format."), {
-      status: 400,
-    });
+  if (!validation.success)
+    return NextResponse.json(
+      { error: "Invalid data format.", details: validation.error },
+      { status: 400 }
+    );
 
   try {
     const productsQuantity = await mergeProductDetailsWithQuantities(
@@ -69,6 +70,12 @@ export async function POST(request: Request) {
       })),
     );
 
+    const baseUrl = getURL();
+    const successUrl = `${baseUrl}orders/${insertedOrder[0].id}`;
+    const cancelUrl = `${baseUrl}cart`;
+
+    console.log("Checkout URLs:", { baseUrl, successUrl, cancelUrl });
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       billing_address_collection: "required",
@@ -85,13 +92,17 @@ export async function POST(request: Request) {
       })),
       mode: "payment",
       allow_promotion_codes: true,
-      success_url: `${getURL()}/orders/${insertedOrder[0].id}`,
-      cancel_url: `${getURL()}/cart`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
     });
 
     return NextResponse.json({ sessionId: session.id });
   } catch (err) {
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("Error creating checkout session:", err);
+    return NextResponse.json(
+      { error: "Internal Error", message: err instanceof Error ? err.message : "Unknown error" },
+      { status: 500 }
+    );
   }
 }
 

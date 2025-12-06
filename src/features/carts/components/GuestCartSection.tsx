@@ -92,7 +92,7 @@ function GuestCartSection() {
 
           <Card className="w-full h-[180px] px-3 col-span-12 md:col-span-3">
             <CardHeader className="px-3 pt-2 pb-0 text-md">
-              <CardTitle className="text-lg mb-0">Subtotoal: </CardTitle>
+              <CardTitle className="text-lg mb-0">Subtotal: </CardTitle>
               <CardDescription>{`${productCount} Items`}</CardDescription>
             </CardHeader>
             <CardContent className="relative overflow-hidden px-3 py-2">
