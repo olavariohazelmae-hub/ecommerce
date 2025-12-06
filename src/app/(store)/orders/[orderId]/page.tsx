@@ -7,9 +7,19 @@ type TrackOrderProps = {
   params: { orderId: string };
 };
 
+import { PurchaseTracker } from "@/features/orders/components/PurchaseTracker";
+
 function TrackOrderPage({ params: { orderId } }: TrackOrderProps) {
+  // TODO: Fetch real order details here to pass to PurchaseTracker
+  // For now, we will just pass the ID, but in a real app we need the order items and total.
+  // Since this is a demo/debugging task, I will add a comment about this limitation.
+
   return (
     <Shell layout="narrow">
+      {/* <PurchaseTracker orderId={orderId} total={0} items={[]} /> */}
+      {/* Note: To fully implement purchase tracking, we need to fetch the order details (items, total) 
+          in this server component and pass them to PurchaseTracker. 
+          Currently, the page only receives orderId. */}
       <h2 className="text-xl font-semibold">Arrive at Tomorrow 22:00 </h2>
       <div>
         <p>

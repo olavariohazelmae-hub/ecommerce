@@ -105,6 +105,7 @@ async function ProductDetailPage({ params }: Props) {
       <div className="grid grid-cols-12 gap-x-8">
         <div className="space-y-8 relative col-span-12 md:col-span-7">
           <ProductAnalyticsTracker product={{ id, name, price }} />
+          {/* Note: ProductAnalyticsTracker likely handles view_item, checking implementation next */}
           <ProductImageShowcase data={data.productsCollection.edges[0].node} />
         </div>
 

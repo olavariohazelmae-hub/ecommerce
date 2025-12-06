@@ -95,6 +95,27 @@ export const beginCheckout = (items: any[]) => {
     }
 };
 
+export const purchase = (transactionId: string, value: number, items: any[]) => {
+    if (typeof window !== "undefined") {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            event: "purchase",
+            ecommerce: {
+                transaction_id: transactionId,
+                value: value,
+                currency: "USD",
+                items: items.map((item) => ({
+                    item_id: item.id,
+                    item_name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                })),
+            },
+        });
+    }
+};
+
 declare global {
     interface Window {
         dataLayer: any[];
